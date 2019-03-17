@@ -1,0 +1,4 @@
+.navbar.is-primary .navbar-brand .navbar-link, .navbar.is-primary .navbar-brand>.navbar-item{
+	color: black;
+	font-weigth: bold;
+}

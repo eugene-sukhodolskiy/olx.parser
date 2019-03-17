@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Olx search engine</title>
+		<link rel="stylesheet" href="static/css/libs/normalize.min.css">
+		<link rel="stylesheet" href="static/css/libs/bulma.min.css">
+		<link rel="stylesheet" href="static/css/all.css">
+		<script src="static/js/libs/ss.min.js"></script>
+		<script src="static/js/app.js"></script>
+	</head>
+	<body>
+		<!-- NAVBAR -->
+		<nav class="navbar is-primary">
+			<div class="navbar-brand">
+				<a class="navbar-item" href="/">
+					OLX SEARCH ENGINE
+				</a>
+				<div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+			<div id="navbarExampleTransparentExample" class="navbar-menu">
+				<div class="navbar-start">
+					<a class="navbar-item" href="https://bulma.io/">
+						Search
+					</a>
+					<div class="navbar-item has-dropdown is-hoverable">
+						<a class="navbar-link" href="https://bulma.io/documentation/overview/start/">
+							About us
+						</a>
+					</div>
+				</div>
+				<div class="navbar-end">
+					<div class="navbar-item">
+						<div class="field is-grouped">
+							<p class="control">
+								<a class="bd-tw-button button" href="https://github.com/eugene-sukhodolskiy/olx.parser" target="_blank">
+									<span>
+										GITHUB
+									</span>
+								</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<!-- MAIN CONTENT -->
+		{% block page %}{% endblock %}
+		<!-- FOOTER -->
+	</body>
+</html>

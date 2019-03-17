@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Olx search engine</title>
-	<link rel="stylesheet" href="static/css/libs/bulma.min.css">
-</head>
-<body>
-	<h1>Olx search engine</h1>
-</body>
-</html>
+{% extends "base.html" %}
+{% block page %}
+	<div class="container">
+		<section class="hero">
+			<div class="hero-body">
+				<div class="container">
+					<h1 class="title">
+					Search by OLX
+					</h1>
+					<div class="search-field">
+						<div class="field">
+							<div class="control is-large">
+								<input class="input is-large" type="text" placeholder="Your query">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+{% endblock page %}
