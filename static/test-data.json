@@ -1,0 +1,28 @@
+{
+	"result":[
+		{
+			"title": "Iphone",
+			"description": "Iphone Description",
+			"photo": "url to photo",
+			"page": "olx.ua/"
+		},
+		{
+			"title": "Iphone2",
+			"description": "Iphone Description2",
+			"photo": "url to photo",
+			"page": "olx.ua/"
+		},
+		{
+			"title": "Iphone3",
+			"description": "Iphone Description3",
+			"photo": "url to photo",
+			"page": "olx.ua/"
+		},
+		{
+			"title": "Iphone4",
+			"description": "Iphone Description4",
+			"photo": "url to photo",
+			"page": "olx.ua/"
+		}
+	]
+}
