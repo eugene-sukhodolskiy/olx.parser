@@ -1,11 +1,12 @@
 from Parser import Parser
+from flask import request
 
 def APIRoutes(app):
 
-	@app.route("/rest-api/v1/search")
+	@app.route("/rest-api/v1/search", methods=['GET'])
 	def search():
-		parser = Parser();
-		return parser.hi()
-		pass	
-
-	pass
+		P = Parser()
+		word = request.args.get('word')		
+		P.keyWord(word)
+		P.resp()
+		return P.hi()
