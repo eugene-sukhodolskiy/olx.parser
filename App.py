@@ -2,8 +2,8 @@ from flask import Flask
 
 app = Flask(__name__)
 
-from WebRoutes import WebRoutes
-from APIRoutes import APIRoutes
+from routes.WebRoutes import WebRoutes
+from routes.APIRoutes import APIRoutes
 
 WebRoutes(app)
 APIRoutes(app)
