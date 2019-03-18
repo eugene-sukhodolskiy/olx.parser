@@ -1,0 +1,3 @@
+dependencies:
+	- Flask
+	- BeautifulSoup4
