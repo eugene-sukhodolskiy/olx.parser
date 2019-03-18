@@ -4,7 +4,7 @@ class Application{
 		ss('.result-container').hide();
 
 		this.search = new Search();
-		this.data = {result: [{title: "Title", description: "description", "page": "url_to_page", "photo": "photo"}]};
+		this.data = {result: [{title: "Title", price: "price", "page": "url_to_page", "photo": "photo"}]};
 		this.ssr = new SSRender('.result-container', this.data);
 		this.searchFieldListener();
 	}
