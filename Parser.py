@@ -3,28 +3,16 @@ import json
 
 
 class Parser:
-	_keyWord = None
 
 	def __init__(self):
 		pass
 
-	def keyWord(self, word = None):
-		self._keyWord = word
-		# print(self._keyWord)
-
-	def hi(self):
-		greetings = "HI "
-		# print(self._keyWord)
-		if self._keyWord is not None:
-			greetings += str(self._keyWord) + " "
-		return greetings[:-1]
-
-	def resp(self):
+	def resp(self, word):
 		keysList = ["photo", "title", "page", "price"]
 		resDict = {}
 		resDictList = []
 		numberOfElem = 0
-		response = requests.get('https://www.olx.ua//list/q-samsung/')
+		response = requests.get('https://www.olx.ua//list/q-' + word + '/')  # https://www.olx.ua/uk/list/q-samsung/
 		a = str(response.content)
 		b = a.split("class=\"wrap\"")
 		resStr = []  # img, link, title, price
@@ -45,24 +33,20 @@ class Parser:
 					begSrc+=len(subStr)
 					endSrc = k.find("\"", begSrc + 1)
 					imgUrl = k[begSrc : endSrc]
-					# print("imgUrl:", k[begSrc : endSrc])  # img url
-					resStr.append(imgUrl)
+					resStr.append(imgUrl) # img url
 					
 				begLink = k.find("<a href=\"https://www.olx.ua/obyavlenie/")
 				if begLink != (-1):
 					begLink = k.find("https://")
 					endLink = k.find("\"", begLink + len("https://"))
 					link = k[begLink : endLink]
-					# print("link:", k[begLink : endLink])
-					resStr.append(link)
+					resStr.append(link)  # link
 
 				begTitle = k.find("<strong>")
 				if begTitle != (-1):
 					tmpLen = len("<strong>")
 					title = k[begTitle + tmpLen : len(k) - tmpLen]
-					# print("title:", k[begTitle + tmpLen : len(k) - tmpLen])  # img url
-					# print("_________________________")
-					resStr.append(title)
+					resStr.append(title)  # title or price
 
 
 				if imgUrl is None and link is None and title is not None:
@@ -70,11 +54,10 @@ class Parser:
 					if endPrice != (-1):
 						tmpStr = title[:endPrice]
 						tmpStr1 = tmpStr.replace(' ', '')
-						price = int(tmpStr1)
-						# print(resStr)
+						price = int(tmpStr1)  # formated price
+
 						if len(resStr) == 4:
 							resStr[3] = price
-							# print(resStr)
 
 							# create dict
 							for i in range(len(resStr)):
@@ -85,7 +68,6 @@ class Parser:
 							resStr.clear()
 
 		# print(self.toJson({"result": resDictList}))
-
 		return self.toJson({"result": resDictList})
 
 	def toJson(self, data = None):
