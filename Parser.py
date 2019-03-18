@@ -8,7 +8,7 @@ class Parser:
 		pass
 
 	def resp(self, word):
-		keysList = ["photo", "title", "page", "price"]
+		keysList = ["photo", "page", "title", "price"]
 		resDict = {}
 		resDictList = []
 		numberOfElem = 0
