@@ -54,7 +54,7 @@ class Parser:
 					if endPrice != (-1):
 						tmpStr = title[:endPrice]
 						tmpStr1 = tmpStr.replace(' ', '')
-						price = int(tmpStr1)  # formated price
+						price = float(tmpStr1)  # formated price
 
 						if len(resStr) == 4:
 							resStr[3] = price
