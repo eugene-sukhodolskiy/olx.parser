@@ -10,10 +10,7 @@ class Application{
 	}
 
 	renderStart(){
-		let self = this;
-		setInterval(function(){
-			self.ssr.render();
-		}, 30);
+		this.ssr.render();
 	}
 
 	searchFieldListener(){
@@ -31,6 +28,7 @@ class Application{
 		this.search.query(searchQuery, function(response){
 			ss('.result-container').show();
 			self.data.result = response.result;
+			self.ssr.render();
 			ss('.search-field .control').toggleClass('is-loading');
 		});
 	}

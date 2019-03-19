@@ -2,3 +2,8 @@
 	color: black;
 	font-weigth: bold;
 }
+
+.preview-img{
+	height: auto;
+	width: 100%;
+}
