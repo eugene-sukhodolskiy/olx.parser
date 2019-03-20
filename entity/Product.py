@@ -25,16 +25,20 @@ class Product:
 		self.timestamp = ""
 		pass
 
+		# Initialize fields from dict
 		def init_from_dict(self, dict_item):
 			if type(dict_item) is not dict:
 				return False;
 
+			# My first python try...catch :)
 			try:
 				props = list(dict_item.keys());
 				for i in props:
+					# Check type on correctly
 					if type(self[i]) == type(dict_item[i]):
 						self[i] = dict_item[i]
 					else:
+						# Generate exception
 						raise BadType()
 					pass
 				pass

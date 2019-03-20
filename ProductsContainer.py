@@ -23,18 +23,22 @@ class ProductsContainer:
 		return product
 		pass
 
+	# Get one product item by index
 	def get_item(self, inx):
 		return self.__products[inx]
 		pass
 
+	# Get all products
 	def get_all(self):
 		return self.__products;
 		pass
 
+	# Convert to json
 	def to_json(self):
 		return json.dumps({'products': self.products})
 		pass
 
+	# Get total products
 	def len(self):
 		return len(self.__products);
 		pass
