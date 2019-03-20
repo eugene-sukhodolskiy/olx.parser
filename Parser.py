@@ -75,7 +75,7 @@ class Parser:
 		if data is not None:
 			# data = {}
 			# data['key'] = 'value'
-			json_data = json.dumps(data)
+			json_data = json.dumps(data, ensure_ascii=False)
 		else:
 			print("toJson:", "Error: wrong data!")
 
