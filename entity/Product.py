@@ -12,6 +12,9 @@ class Product:
 		# Price of product
 		self.price = 0.0
 
+		# Unit of price
+		self.price_unit = ""
+
 		# Description of product
 		self.description = ""
 
@@ -19,7 +22,7 @@ class Product:
 		self.is_advertising = False;
 
 		# Product location
-		self.city = ""
+		self.location = ""
 
 		# When product posted
 		self.timestamp = ""
@@ -35,8 +38,8 @@ class Product:
 			props = list(dict_item.keys());
 			for i in props:
 				# Check type on correctly
-				if type(self[i]) == type(dict_item[i]):
-					self[i] = dict_item[i]
+				if type(self.__dict__[i]) == type(dict_item[i]):
+					self.__dict__[i] = dict_item[i]
 				else:
 					# Generate exception
 					raise BadType()
