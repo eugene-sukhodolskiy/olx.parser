@@ -24,7 +24,8 @@ class Product:
 		self.is_advertising = False;
 
 		# Product location
-		self.location = ""
+		self.region = ""  # Zhytomyr
+		self.location = ""  # Bila Tserkva
 
 		# When product posted
 		self.timestamp = ""
@@ -35,7 +36,6 @@ class Product:
 		if type(dict_item) is not dict:
 			return False;
 
-		# My first python try...catch :)
 		try:
 			props = list(dict_item.keys());
 			for i in props:
