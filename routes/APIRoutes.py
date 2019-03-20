@@ -15,7 +15,7 @@ def APIRoutes(app):
 	def _search():
 		altparser = AltParser(query = request.args.get('query'))
 		products = altparser.get_prods_from_page()
-		return json.dumps({"result": products});
+		return products.to_json()
 		pass
 
 	pass

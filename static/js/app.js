@@ -1,15 +1,14 @@
 class Application{
 	constructor(){
 		console.log("App start");
-		ss('.result-container').hide();
-
 		this.search = new Search();
-		this.data = {result: [{title: "Title", price: "price", "page": "url_to_page", "photo": "photo"}]};
+		this.data = {result: [{title: "Title", price: "price", url: "url_to_page", thumb: "photo"}]};
 		this.ssr = new SSRender('.result-container', this.data);
 		this.searchFieldListener();
 	}
 
 	renderStart(){
+		ss('.result-container').hide();
 		this.ssr.render();
 	}
 
@@ -27,7 +26,7 @@ class Application{
 		let self = this;
 		this.search.query(searchQuery, function(response){
 			ss('.result-container').show();
-			self.data.result = response.result;
+			self.data.result = response.products;
 			self.ssr.render();
 			ss('.search-field .control').toggleClass('is-loading');
 		});

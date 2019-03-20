@@ -17,6 +17,7 @@ class ProductsContainer:
 		return False
 		pass
 
+	# Normalize input data
 	def input_normalize(self, product_type_dict):
 		product = Product()
 		product.init_from_dict(product_type_dict)
@@ -35,12 +36,24 @@ class ProductsContainer:
 
 	# Convert to json
 	def to_json(self):
-		return json.dumps({'products': self.products})
+		prepare = []
+		for prod in self.__products:
+			prepare.append(prod.to_dict())
+			pass
+		return json.dumps({'products': prepare})
 		pass
 
 	# Get total products
 	def len(self):
 		return len(self.__products);
+		pass
+
+	# Print to console
+	def to_display(self):
+		for item in self.__products:
+			item.to_display()
+			print("-----------")
+			pass
 		pass
 
 	pass
