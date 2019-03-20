@@ -35,4 +35,8 @@ class ProductsContainer:
 		return json.dumps({'products': self.products})
 		pass
 
+	def len(self):
+		return len(self.__products);
+		pass
+
 	pass

@@ -39,3 +39,4 @@ window.onload = function(){
 	app = new Application();	
 	app.renderStart();
 }
+

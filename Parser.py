@@ -12,8 +12,8 @@ class Parser:
 		resDict = {}
 		resDictList = []
 		numberOfElem = 0
-		response = requests.get('https://www.olx.ua//list/q-' + word + '/')  # https://www.olx.ua/uk/list/q-samsung/
-		a = str(response.content)
+		response = requests.get('https://www.olx.ua/list/q-' + word + '/')  # https://www.olx.ua/uk/list/q-samsung/
+		a = response.text
 		b = a.split("class=\"wrap\"")
 		resStr = []  # img, link, title, price
 		for i in b:
@@ -50,7 +50,7 @@ class Parser:
 
 
 				if imgUrl is None and link is None and title is not None:
-					endPrice = title.find("\\xd0\\xb3\\xd1\\x80\\xd0\\xbd.")
+					endPrice = title.find("грн.")
 					if endPrice != (-1):
 						tmpStr = title[:endPrice]
 						tmpStr1 = tmpStr.replace(' ', '')
