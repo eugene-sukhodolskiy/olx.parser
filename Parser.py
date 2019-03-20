@@ -30,7 +30,6 @@ class Parser:
 
 				begSrc = k.find(subStr)
 				begSrc2 = k.find(subStr2)
-				# endSrc = 0
 
 				if begSrc != (-1):
 					begSrc+=len(subStr)
@@ -53,7 +52,6 @@ class Parser:
 					resStr.append(link)  # link
 
 				begPrice = k.find("strong>")
-				# print("begPrice", begPrice)
 				if begPrice != (-1) and k[-1] == '.':
 					tmpLen = len("strong>")
 					price = k[tmpLen : len(k) - 1]
