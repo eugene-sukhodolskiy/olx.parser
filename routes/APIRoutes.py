@@ -7,8 +7,8 @@ def APIRoutes(app):
 	@app.route("/rest-api/v1/search", methods = ['GET'])
 	def search():
 		P = Parser()
-		word = request.args.get('word')		
-		return P.resp(word) # yours JSON
+		query = request.args.get('query')		
+		return P.search(query) # yours JSON
 		pass
 
 	@app.route("/rest-api/v0/search", methods = ['GET'])
