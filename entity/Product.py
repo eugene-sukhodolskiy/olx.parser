@@ -14,8 +14,8 @@ class Product:
 		# Price of product
 		self.price = 0.0
 
-		# Unit of price
-		self.price_unit = ""
+		# Currency of price
+		self.currency = ""
 
 		# Description of product
 		self.description = ""

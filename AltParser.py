@@ -53,10 +53,10 @@ class AltParser:
 				pass
 
 			# append data template to prods array
-			prodsStorage.append(prod)
+			prods_storage.append(prod)
 			pass
 
-		return prodsStorage
+		return prods_storage
 		pass
 
 	pass
