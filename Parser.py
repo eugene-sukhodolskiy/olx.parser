@@ -84,12 +84,19 @@ class Parser:
 			# print("____________________________________________")
 			# is promoted
 			# class="offer promoted "
-			is_promoted_container = item.find("td", {"class": "offer"})
-			if is_promoted_container is not None:
+			# is_promoted_container = item.find("td", {"class": "offer"})
+			# if is_promoted_container is not None:
 			# 	print("GET", is_promoted_container)
 				# if is_promoted_container.find("td", {"class": "offer promoted"}) is not None:
-				prod.is_promoted = True
+				# prod.is_promoted = True
 				# print("promoted")
+
+			ko = item.find_parent("table")
+			if ko is not None:
+				print(ko.find("offer-wrapper"))
+			print("____________________")
+			print("____________________")
+			print("____________________")
 
 
 			# append data template to prods array
