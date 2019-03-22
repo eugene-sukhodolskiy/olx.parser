@@ -12,7 +12,7 @@ def APIRoutes(app):
 
 		ProdContainer = P.getProd()  # call it only after P.search(query)
 		ProdList = ProdContainer.get_all()	
-		print(ProdList[1].price)
+		print(ProdList[0].to_display())
 		return JSON_from_Parcer # yours JSON
 		pass
 

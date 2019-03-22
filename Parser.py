@@ -37,6 +37,9 @@ class Parser:
 		self.prodsStorage = ProductsContainer()
 		# Make data template
 		prod = Product()
+		prodDict = prod.to_dict()
+		for key in prodDict:
+			print(key, ";")
 
 		for i in htmlSplitByWrap:
 			l = i.split("<")
@@ -46,6 +49,7 @@ class Parser:
 				link = None
 				title = None
 				price = None
+				currency = ""
 				
 				
 				subStr = "img class=\"fleft\" src=\""
@@ -85,7 +89,7 @@ class Parser:
 				begPrice = k.find("strong>")
 				curList = ["грн.", "$", "€", "Безкоштовно", "Обмін"]  # , "$", "€", "Безкоштовно", "Обмін"
 				curExist = False
-				currency = ""
+				
 				for cur in curList:
 					if k.find(cur) != (-1):
 						curExist = True
@@ -109,10 +113,11 @@ class Parser:
 
 						prod.price = price
 						prod.price_unit = currency
-						# print(prod.price)
+						print(prod.price)
 
 				if len(resStr) == 5:  # lose data in case of product without price
 					# Eugene's data struct
+					prodDict["title"] = "666"
 					self.prodsStorage.append(copy.deepcopy(prod))
 					# print("prodsStorage", prodsStorage.len())
 
