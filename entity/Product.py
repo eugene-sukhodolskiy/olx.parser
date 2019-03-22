@@ -29,6 +29,8 @@ class Product:
 
 		# When product posted
 		self.timestamp = ""
+
+		self.is_exchange = False
 		pass
 
 	# Initialize fields from dict
