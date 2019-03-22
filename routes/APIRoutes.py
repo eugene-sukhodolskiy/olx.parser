@@ -10,7 +10,7 @@ def APIRoutes(app):
 		query = request.args.get('query')	
 		JSON_from_Parcer = P.search(query)
 
-		ProdContainer = P.getProd()  # call it only P.search(query)
+		ProdContainer = P.getProd()  # call it only after P.search(query)
 		ProdList = ProdContainer.get_all()	
 		print(ProdList[1].price)
 		return JSON_from_Parcer # yours JSON
