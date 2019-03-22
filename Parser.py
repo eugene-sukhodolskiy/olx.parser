@@ -129,7 +129,7 @@ class Parser:
 		print("prodsStorage.len():", self.prodsStorage.len())
 		return self.toJson({"result": resDictList})
 
-	def getProd(self):
+	def getProd(self):  # call it only after self.getProdList() -> return None (if not)
 		# return copy.deepcopy(self.prodsStorage)
 		return self.prodsStorage
 
