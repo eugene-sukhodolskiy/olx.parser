@@ -3,6 +3,7 @@ import json
 from entity.Product import Product
 from ProductsContainer import ProductsContainer
 import copy
+from bs4 import BeautifulSoup
 
 class Parser:
 
@@ -14,11 +15,12 @@ class Parser:
 
 	def search(self, query):
 		if query:
-			self.make_request('https://www.olx.ua/list/q-' + query + '/')  # ?currency=USD
+			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/')  # ?currency=USD
+			self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?search%5Border%5D=filter_float_price%3Aasc')  # min price
 			# self.make_request('https://www.olx.ua/list/q-' + query + '/?currency=USD')
-			return self.getProdList()
+			return self.get_products()
 		else:
-			print("getNewProdListError: wrong query!")
+			print("get_products: Error: wrong query!")
 			return False 
 
 	# https://www.olx.ua/uk/list/q-samsung/
@@ -26,126 +28,76 @@ class Parser:
 		response = requests.get(url)
 		self.html = str(response.text)
 
-	def getProdList(self):
-		keysList = ["photo", "title", "page", "price", "currency", "id", "price_unit", "description", \
-		"is_advertising", "region", "location", "timestamp"]
-		resDict = {}
-		resDictList = []
-		htmlSplitByWrap = self.html.split("class=\"wrap\"")
-		resStr = []  # img, link, title, price
+	def get_products(self):
+		soup = BeautifulSoup(str(self.html), features = "lxml")
+
+		# find tables list with products
+		prods_src = soup.findAll("table", {"class": "breakword"})
+
 		# storage for products
-		self.prodsStorage = ProductsContainer()
-		# Make data template
-		prod = Product()
-		prodDict = prod.to_dict()
-		for key in prodDict:
-			print(key, ";")
+		prodsStorage = ProductsContainer()
 
-		for i in htmlSplitByWrap:
-			l = i.split("<")
+		for item in prods_src:
 
-			for k in l:
-				imgUrl = None
-				link = None
-				title = None
-				price = None
-				currency = ""
-				
-				
-				subStr = "img class=\"fleft\" src=\""
-				subStr2 = " alt=\""
+			# Make data template
+			prod = Product()
 
-				begSrc = k.find(subStr)
-				begSrc2 = k.find(subStr2)
+			# find title and url to page
+			prod.title = item.find("td", {"class": "title-cell"}).find("a", {"class": "detailsLink"}).find("strong").text
+			prod.url = item.find("td", {"class": "title-cell"}).find("a", {"class": "detailsLink"}).get("href")
 
-				if begSrc != (-1):
-					begSrc+=len(subStr)
-					begSrc2+=len(subStr2)
-					endSrc = k.find(";s=261x203", begSrc + 1)
-					if endSrc == (-1):
-						endSrc = k.find("\\", begSrc + 1)  # fix strange ending img Link
-					# print("endSrc:", endSrc)
-					endSrc2 = k.find("\">", begSrc2 + 1)
-					imgUrl = k[begSrc : endSrc]
-					title = k[begSrc2 : endSrc2]
-					# print("imgUrl:", imgUrl)
-					# print("title:", title)
-					resStr.append(imgUrl) # img url
-					resStr.append(title) # img title
-					prod.title = title
-					prod.thumb = imgUrl  # whtf (thumb?)
-					# print(prod)
-					
-				begLink = k.find("a href=\"https://www.olx.ua/obyavlenie/")
-				if begLink != (-1):
-					begLink = k.find("https://")
-					endLink = k.find(".html", begLink + len("https://")) + 5  # 5 len(".html")
-					link = k[begLink : endLink]
-					# print("link:", link)
-					resStr.append(link)  # link
-					prod.url = link
+			# find photo
+			photo = item.find("img", {"class": "fleft"})
+			if photo is not None:
+				prod.thumb = photo.get("src")
+				pass
 
-				# add "free", "change", different currency
-				begPrice = k.find("strong>")
-				curList = ["грн.", "$", "€", "Безкоштовно", "Обмін"]  # , "$", "€", "Безкоштовно", "Обмін"
-				curExist = False
-				
-				for cur in curList:
-					if k.find(cur) != (-1):
-						curExist = True
-						if cur == "грн.":
-							currency = cur[:-1]  # remove point in "грн." 
-						else:
-							currency = cur  # "€" e.x.
-				if begPrice != (-1) and curExist:
-				# if begPrice != (-1) and k[-1] == '.':
-					tmpLen = len("strong>")
-					if str(k[tmpLen]).isdigit():
-						if k.find("грн.") != (-1):
-							price = ''.join(c for c in str(k[tmpLen : len(k) - 5]) if c.isdigit())  # remove all signs exept digits
-						else:
-							price = ''.join(c for c in str(k[tmpLen : len(k) - 2]) if c.isdigit())  # remove all signs exept digits
-						# print("price:", price)
-						# print("currency:", currency)
-						resStr.append(price)  # price
-						resStr.append(currency)
-						# print("price is ready")
+			# find price
+			price_container = item.find("p", {"class": "price"});
+			if price_container is not None:
+				price_src = price_container.find("strong").text.split(' ')
+				if price_src[0].find("Обмін") > -1: 
+					# print("Обмін")
+					prod.price = 0.0
+					prod.is_exchange = True
+				elif price_src[0].find("Безкоштовно") > -1:
+					# print("Безкоштовно")
+					prod.price = 0.0
+				else:
+					tmp_str = ""
+					for i in price_src:
+						tmp_str += i
+					prise_str = ''.join(c for c in str(tmp_str) if c.isdigit())
+					prod.price = float(prise_str)
+					tmp_currency = price_src[len(price_src)-1]
+					if tmp_currency == "грн.":
+						prod.currency = tmp_currency[:-1]
+					else:
+						prod.currency = tmp_currency
+					pass
+				pass
 
-						prod.price = price
-						prod.price_unit = currency
-						print(prod.price)
 
-				if len(resStr) == 5:  # lose data in case of product without price
-					# Eugene's data struct
-					prodDict["title"] = "666"
-					self.prodsStorage.append(copy.deepcopy(prod))
-					# print("prodsStorage", prodsStorage.len())
+			# print(item)
+			# print("____________________________________________")
+			# print("____________________________________________")
+			# print("____________________________________________")
+			# is promoted
+			# class="offer promoted "
+			is_promoted_container = item.find("td", {"class": "offer"})
+			if is_promoted_container is not None:
+			# 	print("GET", is_promoted_container)
+				# if is_promoted_container.find("td", {"class": "offer promoted"}) is not None:
+				prod.is_promoted = True
+				# print("promoted")
 
-					# create dict
-					for i in range(len(resStr)):
-						resDict.update({ keysList[i]: resStr[i]})
-					resDictList.append(copy.deepcopy(dict(resDict)))  # hard copy of dict obj
-					resStr.clear()
 
-		# print(self.toJson({"result": resDictList}))
-		# tmp = prodsStorage.get_all()
-		# for lol in tmp:
-		# 	print("title", lol.title)
-		print("prodsStorage.len():", self.prodsStorage.len())
-		return self.toJson({"result": resDictList})
+			# append data template to prods array
+			prodsStorage.append(prod)
+			pass
 
-	def getProd(self):  # call it only after self.getProdList() -> return None (if not)
-		# return copy.deepcopy(self.prodsStorage)
-		return self.prodsStorage
+		return prodsStorage
+		pass
 
-	def toJson(self, data = None):
-		if data is not None:
-			# data = {}
-			# data['key'] = 'value'
-			json_data = json.dumps(data, ensure_ascii=False)
-		else:
-			print("toJsonError: wrong data!")
-			return False
-
-		return json_data
+	pass
 						

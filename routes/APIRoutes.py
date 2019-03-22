@@ -8,12 +8,15 @@ def APIRoutes(app):
 	def search():
 		P = Parser()
 		query = request.args.get('query')	
-		JSON_from_Parcer = P.search(query)
 
-		ProdContainer = P.getProd()  # call it only after P.search(query)
-		ProdList = ProdContainer.get_all()	
-		print(ProdList[0].to_display())
-		return JSON_from_Parcer # yours JSON
+		ProductsContainer = P.search(query)
+
+		# distplay it via console
+		# Items = ProductsContainer.get_all()
+		# for Item in Items:
+		# 	Item.to_display()
+
+		return ProductsContainer.to_json()
 		pass
 
 	@app.route("/rest-api/v0/search", methods = ['GET'])

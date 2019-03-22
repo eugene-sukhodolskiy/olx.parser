@@ -43,7 +43,7 @@ class ProductsContainer:
 		for prod in self.__products:
 			prepare.append(prod.to_dict())
 			pass
-		return json.dumps({'products': prepare})
+		return json.dumps({'products': prepare}, ensure_ascii=False)
 		pass
 
 	# Get total products

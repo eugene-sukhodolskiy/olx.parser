@@ -21,7 +21,7 @@ class Product:
 		self.description = ""
 
 		# Flag if product is advertising
-		self.is_advertising = False;
+		self.is_promoted = False;
 
 		# Product location
 		self.region = ""  # Zhytomyr

@@ -2,7 +2,7 @@ class Application{
 	constructor(){
 		console.log("App start");
 		this.search = new Search();
-		this.data = {result: [{title: "Title", price: "price", url: "url_to_page", thumb: "photo"}]};
+		this.data = {result: [{title: "Title", price: "price", currency: "currency", is_exchange: "is_exchange", is_promoted: "is_promoted", url: "url_to_page", thumb: "photo"}]};
 		this.ssr = new SSRender('.result-container', this.data);
 		this.searchFieldListener();
 	}
