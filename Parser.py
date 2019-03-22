@@ -2,17 +2,20 @@ import requests
 import json
 from entity.Product import Product
 from ProductsContainer import ProductsContainer
+import copy
 
 class Parser:
 
 	html = None
+	prodsStorage = None
 
 	def __init__(self):
 		pass
 
 	def search(self, query):
 		if query:
-			self.make_request('https://www.olx.ua/list/q-' + query + '/')
+			self.make_request('https://www.olx.ua/list/q-' + query + '/')  # ?currency=USD
+			# self.make_request('https://www.olx.ua/list/q-' + query + '/?currency=USD')
 			return self.getProdList()
 		else:
 			print("getNewProdListError: wrong query!")
@@ -24,14 +27,14 @@ class Parser:
 		self.html = str(response.text)
 
 	def getProdList(self):
-		keysList = ["photo", "title", "page", "price", "id", "price_unit", "description", \
+		keysList = ["photo", "title", "page", "price", "currency", "id", "price_unit", "description", \
 		"is_advertising", "region", "location", "timestamp"]
 		resDict = {}
 		resDictList = []
 		htmlSplitByWrap = self.html.split("class=\"wrap\"")
 		resStr = []  # img, link, title, price
 		# storage for products
-		prodsStorage = ProductsContainer()
+		self.prodsStorage = ProductsContainer()
 		# Make data template
 		prod = Product()
 
@@ -55,6 +58,9 @@ class Parser:
 					begSrc+=len(subStr)
 					begSrc2+=len(subStr2)
 					endSrc = k.find(";s=261x203", begSrc + 1)
+					if endSrc == (-1):
+						endSrc = k.find("\\", begSrc + 1)  # fix strange ending img Link
+					# print("endSrc:", endSrc)
 					endSrc2 = k.find("\">", begSrc2 + 1)
 					imgUrl = k[begSrc : endSrc]
 					title = k[begSrc2 : endSrc2]
@@ -64,6 +70,7 @@ class Parser:
 					resStr.append(title) # img title
 					prod.title = title
 					prod.thumb = imgUrl  # whtf (thumb?)
+					# print(prod)
 					
 				begLink = k.find("a href=\"https://www.olx.ua/obyavlenie/")
 				if begLink != (-1):
@@ -76,26 +83,55 @@ class Parser:
 
 				# add "free", "change", different currency
 				begPrice = k.find("strong>")
-				if begPrice != (-1) and k[-1] == '.':
+				curList = ["грн.", "$", "€", "Безкоштовно", "Обмін"]  # , "$", "€", "Безкоштовно", "Обмін"
+				curExist = False
+				currency = ""
+				for cur in curList:
+					if k.find(cur) != (-1):
+						curExist = True
+						if cur == "грн.":
+							currency = cur[:-1]  # remove point in "грн." 
+						else:
+							currency = cur  # "€" e.x.
+				if begPrice != (-1) and curExist:
+				# if begPrice != (-1) and k[-1] == '.':
 					tmpLen = len("strong>")
-					price = k[tmpLen : len(k) - 1]
-					# print("price:", price)
-					resStr.append(price)  # title or price
-					prod.price = 99.99  # just for test
+					if str(k[tmpLen]).isdigit():
+						if k.find("грн.") != (-1):
+							price = ''.join(c for c in str(k[tmpLen : len(k) - 5]) if c.isdigit())  # remove all signs exept digits
+						else:
+							price = ''.join(c for c in str(k[tmpLen : len(k) - 2]) if c.isdigit())  # remove all signs exept digits
+						# print("price:", price)
+						# print("currency:", currency)
+						resStr.append(price)  # price
+						resStr.append(currency)
+						# print("price is ready")
 
-			if len(resStr) == 4:
-				# Eugene's data struct
-				prodsStorage.append(prod)
-				print("prodsStorage", prodsStorage.len())
+						prod.price = price
+						prod.price_unit = currency
+						# print(prod.price)
 
-				# create dict
-				for i in range(len(resStr)):
-					resDict.update({ keysList[i]: resStr[i]})
-				resDictList.append(dict(resDict))  # hard copy of dict obj
-				resStr.clear()
+				if len(resStr) == 5:  # lose data in case of product without price
+					# Eugene's data struct
+					self.prodsStorage.append(copy.deepcopy(prod))
+					# print("prodsStorage", prodsStorage.len())
+
+					# create dict
+					for i in range(len(resStr)):
+						resDict.update({ keysList[i]: resStr[i]})
+					resDictList.append(copy.deepcopy(dict(resDict)))  # hard copy of dict obj
+					resStr.clear()
 
 		# print(self.toJson({"result": resDictList}))
+		# tmp = prodsStorage.get_all()
+		# for lol in tmp:
+		# 	print("title", lol.title)
+		print("prodsStorage.len():", self.prodsStorage.len())
 		return self.toJson({"result": resDictList})
+
+	def getProd(self):
+		# return copy.deepcopy(self.prodsStorage)
+		return self.prodsStorage
 
 	def toJson(self, data = None):
 		if data is not None:
