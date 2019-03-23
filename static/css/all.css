@@ -7,3 +7,12 @@
 	height: auto;
 	width: 100%;
 }
+
+.card-image{
+    max-height: 200px;
+    overflow: hidden;
+}
+
+[is_promoted="true"]{
+	outline: 2px solid #FF6F00;
+}
