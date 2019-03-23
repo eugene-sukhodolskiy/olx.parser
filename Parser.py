@@ -45,7 +45,7 @@ class Parser:
 			# find title, url, is_promoted
 			prod.title = item.find("td", {"class": "title-cell"}).find("a", {"class": "detailsLink"}).find("strong").text
 			prod.url = item.find("td", {"class": "title-cell"}).find("a", {"class": "detailsLink"}).get("href")
-			prod.is_promoted = True if prod.url.find(";promoted") else False
+			prod.is_promoted = False if prod.url.find(";promoted") == (-1) else True
 
 			# find photo
 			photo = item.find("img", {"class": "fleft"})
