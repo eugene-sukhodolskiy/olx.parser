@@ -3,7 +3,7 @@ class Application{
 		console.log("App start");
 		this.search = new Search();
 		this.data = {result: [{title: "Title", price: "price", currency: "currency", is_exchange: "is_exchange", is_promoted: "is_promoted", 
-		url: "url_to_page", thumb: "photo", category: "category", location: "location", timestamp: "timestamp"}]};
+		url: "url_to_page", thumb: "photo", location: "location", timestamp: "timestamp"}]};
 		// this.data = {result: [{title: "Title", price: "price", currency: "currency", url: "url_to_page", thumb: "photo"}]};
 		this.ssr = new SSRender('.result-container', this.data);
 		if(document.location.hash != ''){
