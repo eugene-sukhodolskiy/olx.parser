@@ -2,7 +2,7 @@ import requests
 import json
 from entity.Product import Product
 from ProductsContainer import ProductsContainer
-import copy
+# import copy
 from bs4 import BeautifulSoup
 
 class Parser:
@@ -14,10 +14,10 @@ class Parser:
 		pass
 
 	def search(self, query):
-		if query:
-			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/')  # ?currency=USD
-			self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?search%5Border%5D=filter_float_price%3Aasc')  # min price
-			# self.make_request('https://www.olx.ua/list/q-' + query + '/?currency=USD')
+		if query is not None:
+			self.make_request('https://www.olx.ua/uk/list/q-' + query + '/')
+			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?search%5Border%5D=filter_float_price%3Aasc')  # min price
+			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?currency=USD')
 			return self.get_products()
 		else:
 			print("get_products: Error: wrong query!")
@@ -42,9 +42,10 @@ class Parser:
 			# Make data template
 			prod = Product()
 
-			# find title and url to page
+			# find title, url, is_promoted
 			prod.title = item.find("td", {"class": "title-cell"}).find("a", {"class": "detailsLink"}).find("strong").text
 			prod.url = item.find("td", {"class": "title-cell"}).find("a", {"class": "detailsLink"}).get("href")
+			prod.is_promoted = True if prod.url.find(";promoted") else False
 
 			# find photo
 			photo = item.find("img", {"class": "fleft"})
@@ -52,7 +53,7 @@ class Parser:
 				prod.thumb = photo.get("src")
 				pass
 
-			# find price
+			# find price and is_exchange
 			price_container = item.find("p", {"class": "price"});
 			if price_container is not None:
 				price_src = price_container.find("strong").text.split(' ')
@@ -91,12 +92,12 @@ class Parser:
 				# prod.is_promoted = True
 				# print("promoted")
 
-			ko = item.find_parent("table")
-			if ko is not None:
-				print(ko.find("offer-wrapper"))
-			print("____________________")
-			print("____________________")
-			print("____________________")
+			# ko = item.find_parent("table")
+			# if ko is not None:
+			# 	print(ko.find("offer-wrapper"))
+			# print("____________________")
+			# print("____________________")
+			# print("____________________")
 
 
 			# append data template to prods array

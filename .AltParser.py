@@ -8,7 +8,7 @@ class AltParser:
 
 	def __init__(self, query):
 		# make request and save response to self.html
-		self.make_request('https://www.olx.ua/list/q-' + query + '/')
+		self.make_request('https://www.olx.ua/ru/list/q-' + query + '/')
 		pass
 
 	def make_request(self, url):
@@ -24,7 +24,7 @@ class AltParser:
 		prods_src = soup.findAll("table", {"class": "breakword"})
 
 		# storage for products
-		prodsStorage = ProductsContainer()
+		prods_storage = ProductsContainer()
 
 		for item in prods_src:
 

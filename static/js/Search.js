@@ -1,7 +1,6 @@
 class Search{
 	constructor(){
 		this.search_api_url = '/rest-api/v1/search?query=';
-		// this.search_api_url = '/rest-api/v0/search?query=';
 	}
 
 	query(searchQuery, callback){
