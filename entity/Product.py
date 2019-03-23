@@ -24,11 +24,13 @@ class Product:
 		self.is_promoted = False
 
 		# Product location
-		self.region = ""  # Zhytomyr
 		self.location = ""  # Bila Tserkva
 
 		# When product posted
 		self.timestamp = ""
+
+		# Category of the product
+		self.category = ""
 
 		self.is_exchange = False
 		pass

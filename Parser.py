@@ -78,26 +78,16 @@ class Parser:
 					pass
 				pass
 
+			# find category, timestamp, location
+			tmpList = []
+			temp_container = item.findAll("small", {"class": "breadcrumb x-normal"})
+			for i in temp_container:
+				data_list = i.text.split("<i data-icon=\"")
+				tmpList.append(data_list[0].strip())
 
-			# print(item)
-			# print("____________________________________________")
-			# print("____________________________________________")
-			# print("____________________________________________")
-			# is promoted
-			# class="offer promoted "
-			# is_promoted_container = item.find("td", {"class": "offer"})
-			# if is_promoted_container is not None:
-			# 	print("GET", is_promoted_container)
-				# if is_promoted_container.find("td", {"class": "offer promoted"}) is not None:
-				# prod.is_promoted = True
-				# print("promoted")
-
-			# ko = item.find_parent("table")
-			# if ko is not None:
-			# 	print(ko.find("offer-wrapper"))
-			# print("____________________")
-			# print("____________________")
-			# print("____________________")
+			prod.category = tmpList[0]
+			prod.location = tmpList[1]
+			prod.timestamp = tmpList[2]
 
 
 			# append data template to prods array
