@@ -13,9 +13,9 @@ class Parser:
 	def __init__(self):
 		pass
 
-	def search(self, query):
+	def search(self, query, additional_query = ""):
 		if query is not None:
-			self.make_request('https://www.olx.ua/uk/list/q-' + query + '/')
+			self.make_request('https://www.olx.ua/uk/list/q-' + query + '/' + additional_query)
 			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?search%5Border%5D=filter_float_price%3Aasc')  # min price
 			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?currency=USD')
 			return self.get_products()
@@ -98,4 +98,28 @@ class Parser:
 		pass
 
 	pass
+
+
+	def get_page(self, query, page_number = 1):
+		if page_number <= 1 and not isinstance(page_number, int):
+			print("get_page: Error: wrong page number!")
+			return None
+		else:
+			additional_query = "?page=" + str(page_number)
+			return self.search(query, additional_query)
+
+
+	def pages_ammount(self, query):
+		self.make_request('https://www.olx.ua/uk/list/q-' + query + '/')
+		soup = BeautifulSoup(str(self.html), features = "lxml")
+		# pages = soup.findAll("div", {"class": "pager rel clr"})
+		ammount = soup.findAll("span", {"class": "item fleft"})
+		try:
+			str_max_number = ammount[-1].text
+		except IndexError:
+			print("pages_ammount: Error: pages for this query don't exist!")
+			return None
+		max_number = ''.join(c for c in str(str_max_number.split("<span>")) if c.isdigit()) 
+		# print(max_number)
+		return max_number
 						
