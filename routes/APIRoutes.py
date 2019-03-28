@@ -8,9 +8,11 @@ def APIRoutes(app):
 		P = Parser()
 		query = request.args.get('query')	
 
-		ProductsContainer = P.search(query)
-		# ProductsContainer = P.get_page(query, 200)
-		# print(P.pages_ammount(query))
-
-		return ProductsContainer.to_json()
+		if P.is_exist(query):
+			# return "Page is exist!"
+			ProductsContainer = P.search(query)
+			# ProductsContainer = P.get_page(query, 200)
+			print(P.pages_ammount(query))
+			return ProductsContainer.to_json()
+		return "Page doesn't exist! Please, try to use other key word."
 		pass

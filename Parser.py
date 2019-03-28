@@ -2,7 +2,6 @@ import requests
 import json
 from entity.Product import Product
 from ProductsContainer import ProductsContainer
-# import copy
 from bs4 import BeautifulSoup
 
 class Parser:
@@ -14,20 +13,31 @@ class Parser:
 		pass
 
 	def search(self, query, additional_query = ""):
-		if query is not None:
-			self.make_request('https://www.olx.ua/uk/list/q-' + query + '/' + additional_query)
-			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?search%5Border%5D=filter_float_price%3Aasc')  # min price
-			# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?currency=USD')
-			return self.get_products()
+		if query is not None:  # query isn't empty
+
+			if self.is_exist():  # page is exist
+				self.make_request('https://www.olx.ua/uk/list/q-' + query + '/' + additional_query)
+				# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?search%5Border%5D=filter_float_price%3Aasc')  # min price
+				# self.make_request('https://www.olx.ua/uk/list/q-' + query + '/?currency=USD')
+				return self.get_products()
+			else:
+				return False  # page doesn't exist
+
 		else:
-			print("get_products: Error: wrong query!")
-			return False 
+			# print("get_products: Error: wrong query!")
+			return False  # query is empty
+
+	pass  # especially for Eugene ;-)
 
 	# https://www.olx.ua/uk/list/q-samsung/
 	def make_request(self, url):
 		response = requests.get(url)
 		self.html = str(response.text)
 
+	pass  # especially for Eugene ;-)
+
+
+	# get list of products (is automaticaly returned by self.search() method (if pages exist))
 	def get_products(self):
 		soup = BeautifulSoup(str(self.html), features = "lxml")
 
@@ -99,27 +109,53 @@ class Parser:
 
 	pass
 
-
+	# get page with number (if exist)
 	def get_page(self, query, page_number = 1):
 		if page_number <= 1 and not isinstance(page_number, int):
 			print("get_page: Error: wrong page number!")
 			return None
 		else:
-			additional_query = "?page=" + str(page_number)
-			return self.search(query, additional_query)
+
+			if self.is_exist(query):
+				additional_query = "?page=" + str(page_number)
+				return self.search(query, additional_query)
+			else:
+				# page doesn't exist
+				return None
+
+	pass  # especially for Eugene ;-)
 
 
+	def is_exist(self, query):
+		# <span class="marker">Перевірте правильність написання або введіть інші параметри пошуку</span>
+		self.make_request('https://www.olx.ua/uk/list/q-' + query + '/')
+		soup = BeautifulSoup(str(self.html), features = "lxml")
+		not_found = soup.findAll("span", {"class": "marker"})
+		not_exist_answer = "<span class=\"marker\">Перевірте правильність написання або введіть інші параметри пошуку</span>"
+
+		if not_exist_answer in not_found:
+			print("pages_ammount: Error: page doesn't exist:", not_found)
+			return False
+		return True
+
+	pass  # especially for Eugene ;-)
+
+
+	# also it is possible to use for checking whether pages for this request are exist (different method of checking)
 	def pages_ammount(self, query):
 		self.make_request('https://www.olx.ua/uk/list/q-' + query + '/')
 		soup = BeautifulSoup(str(self.html), features = "lxml")
 		# pages = soup.findAll("div", {"class": "pager rel clr"})
 		ammount = soup.findAll("span", {"class": "item fleft"})
+
 		try:
 			str_max_number = ammount[-1].text
 		except IndexError:
 			print("pages_ammount: Error: pages for this query don't exist!")
-			return None
+			return False
+
 		max_number = ''.join(c for c in str(str_max_number.split("<span>")) if c.isdigit()) 
-		# print(max_number)
-		return max_number
+		return max_number  # pages with results for current request
+
+	pass  # especially for Eugene ;-)
 						
