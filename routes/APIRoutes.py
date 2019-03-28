@@ -8,7 +8,7 @@ def APIRoutes(app):
 		P = Parser()
 		query = request.args.get('query')	
 
-		if P.is_exist(query):
+		if P.is_exist(query):  # page is exist
 			# return "Page is exist!"
 			ProductsContainer = P.search(query)
 			# ProductsContainer = P.get_page(query, 200)
